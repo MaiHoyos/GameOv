@@ -278,7 +278,7 @@ button:disabled {
     position: fixed;
     bottom: 20px;
     left: 20px;
-    width: 300px; /* Reducido de 300px a 150px */
+    width: 300px;
     height: auto;
     z-index: 1000;
 }
