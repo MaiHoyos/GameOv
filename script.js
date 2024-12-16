@@ -170,12 +170,6 @@ function closeSelectedNumbers() {
     selectedSum = 0;
     canRoll = true;
     rollButton.disabled = false;
-
-    if (!checkPossibleSum(currentSum, numbers)) {
-        setTimeout(() => {
-            showGameOverModal();
-        }, 1500);
-    }
 }
 
 acceptBtn.onclick = function() {
