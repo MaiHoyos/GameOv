@@ -13,7 +13,8 @@ const cancelBtn = document.getElementById('cancelSum');
 const sumInput = document.getElementById('sumInput');
 const diceSumText = document.getElementById('diceSum');
 
-let currentSum = 0;let selectedSum = 0;
+let currentSum = 0;
+let selectedSum = 0;
 let canRoll = true;
 
 playButton.addEventListener('click', () => {
@@ -132,27 +133,31 @@ function checkPossibleSum(targetSum, availableNumbers) {
         .filter(num => !num.classList.contains('closed') && !num.classList.contains('selected'))
         .map(num => parseInt(num.dataset.value));
 
-    for (let i = 1; i <= 4; i++) {
-        if (findCombination(numbers, targetSum, i)) {
-            return true;
-        }
-    }
-    return false;
-}
+    function findCombinations(array, target, max = 4) {
+        const results = [];
 
-function findCombination(numbers, target, count, start = 0, current = []) {
-    if (count === 0) {
-        return current.reduce((a, b) => a + b, 0) === target;
-    }
-    
-    for (let i = start; i < numbers.length; i++) {
-        current.push(numbers[i]);
-        if (findCombination(numbers, target, count - 1, i + 1, current)) {
-            return true;
+        function backtrack(start, combination, sum) {
+            if (sum === target && combination.length <= max) {
+                results.push([...combination]);
+                return;
+            }
+            if (sum > target || combination.length >= max || start >= array.length) {
+                return;
+            }
+
+            for (let i = start; i < array.length; i++) {
+                combination.push(array[i]);
+                backtrack(i + 1, combination, sum + array[i]);
+                combination.pop();
+            }
         }
-        current.pop();
+
+        backtrack(0, [], 0);
+        return results;
     }
-    return false;
+
+    const combinations = findCombinations(numbers, targetSum);
+    return combinations.length > 0;
 }
 
 function closeSelectedNumbers() {
@@ -232,4 +237,3 @@ document.getElementById('gameOverReset').addEventListener('click', function() {
     document.getElementById('gameOverModal').style.display = 'none';
     resetGame();
 });
-
