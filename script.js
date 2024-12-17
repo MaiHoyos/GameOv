@@ -186,7 +186,7 @@ function closeSelectedNumbers() {
     rollButton.disabled = false;
 }
 
-acceptBtn.onclick = function() {
+function handleSumSubmission() {
     const userSum = parseInt(sumInput.value);
     const correctSum = parseInt(die1.alt.split(' ').pop()) + parseInt(die2.alt.split(' ').pop());
     
@@ -207,6 +207,10 @@ acceptBtn.onclick = function() {
         hideSumModal();
         showIncorrectGif();
     }
+}
+
+acceptBtn.onclick = function() {
+    handleSumSubmission();
 }
 
 function rollDice() {
@@ -252,10 +256,9 @@ document.getElementById('victoryReset').addEventListener('click', function() {
     resetGame();
 });
 
-// Add event listener for Enter key on sum input
 sumInput.addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {
         event.preventDefault();
-        acceptBtn.click();
+        handleSumSubmission();
     }
 });
