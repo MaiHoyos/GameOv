@@ -80,6 +80,7 @@ function showSumModal(dice1Value, dice2Value) {
     diceSumText.textContent = `${dice1Value} + ${dice2Value} =`;
     sumInput.value = '';
     modal.style.display = 'block';
+    sumInput.focus(); // Automatically focus the input
 }
 
 function hideSumModal() {
@@ -108,6 +109,11 @@ function showGameOverModal() {
     gameOverModal.style.display = 'block';
 }
 
+function showVictoryModal() {
+    const victoryModal = document.getElementById('victoryModal');
+    victoryModal.style.display = 'block';
+}
+
 closeBtn.onclick = () => {
     if (confirm('¿Estás seguro de que quieres cerrar? Aún no has ingresado la suma correcta.')) {
         hideSumModal();
@@ -132,6 +138,14 @@ function checkPossibleSum(targetSum, availableNumbers) {
     const numbers = Array.from(availableNumbers)
         .filter(num => !num.classList.contains('closed') && !num.classList.contains('selected'))
         .map(num => parseInt(num.dataset.value));
+
+    // If no numbers are left, player has won
+    if (numbers.length === 0) {
+        setTimeout(() => {
+            showVictoryModal();
+        }, 1500);
+        return false;
+    }
 
     function findCombinations(array, target, max = 4) {
         const results = [];
@@ -223,6 +237,7 @@ function resetGame() {
     canRoll = true;
     rollButton.disabled = false;
     document.getElementById('gameOverModal').style.display = 'none';
+    document.getElementById('victoryModal').style.display = 'none';
 }
 
 rollButton.addEventListener('click', rollDice);
@@ -230,4 +245,17 @@ resetButton.addEventListener('click', resetGame);
 document.getElementById('gameOverReset').addEventListener('click', function() {
     document.getElementById('gameOverModal').style.display = 'none';
     resetGame();
+});
+
+document.getElementById('victoryReset').addEventListener('click', function() {
+    document.getElementById('victoryModal').style.display = 'none';
+    resetGame();
+});
+
+// Add event listener for Enter key on sum input
+sumInput.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        acceptBtn.click();
+    }
 });
