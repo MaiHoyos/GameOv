@@ -80,11 +80,13 @@ function showSumModal(dice1Value, dice2Value) {
     diceSumText.textContent = `${dice1Value} + ${dice2Value} =`;
     sumInput.value = '';
     modal.style.display = 'block';
-    sumInput.focus(); // Automatically focus the input
+    sumInput.focus();
+    sumInput.addEventListener('keydown', handleEnterKey);
 }
 
 function hideSumModal() {
     modal.style.display = 'none';
+    sumInput.removeEventListener('keydown', handleEnterKey);
 }
 
 function showCorrectGif() {
@@ -139,7 +141,6 @@ function checkPossibleSum(targetSum, availableNumbers) {
         .filter(num => !num.classList.contains('closed') && !num.classList.contains('selected'))
         .map(num => parseInt(num.dataset.value));
 
-    // If no numbers are left, player has won
     if (numbers.length === 0) {
         setTimeout(() => {
             showVictoryModal();
@@ -209,6 +210,13 @@ function handleSumSubmission() {
     }
 }
 
+function handleEnterKey(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        handleSumSubmission();
+    }
+}
+
 acceptBtn.onclick = function() {
     handleSumSubmission();
 }
@@ -254,11 +262,4 @@ document.getElementById('gameOverReset').addEventListener('click', function() {
 document.getElementById('victoryReset').addEventListener('click', function() {
     document.getElementById('victoryModal').style.display = 'none';
     resetGame();
-});
-
-sumInput.addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        handleSumSubmission();
-    }
 });
